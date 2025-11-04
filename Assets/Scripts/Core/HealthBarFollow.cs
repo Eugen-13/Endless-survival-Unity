@@ -6,9 +6,8 @@ public class HealthBarFollow : MonoBehaviour, IPoolable
     [SerializeField] private SpriteRenderer _fillRenderer;
     [SerializeField] private Vector3 _offset = new Vector3(0, 0.8f, 0);
     private Transform _target;
-    private Transform _fillTransform; // Кэшируем transform
-    private float _maxHealth = 100f;
-    private float _currentHealth;
+    private Transform _fillTransform;
+    private IHealth _healthSource;
     private string _poolName;
 
     void Awake()
@@ -16,38 +15,29 @@ public class HealthBarFollow : MonoBehaviour, IPoolable
         _fillTransform = _fillRenderer.transform;
     }
 
-    void Start()
+
+    public void SetHealthSource(IHealth source)
     {
-        _currentHealth = _maxHealth;
+        if (_healthSource != null)
+            _healthSource.OnHealthChanged -= UpdateBar;
+
+        _healthSource = source;
+
+        if (_healthSource != null)
+        {
+            _healthSource.OnHealthChanged += UpdateBar;
+            UpdateBar(_healthSource.CurrentHealth, _healthSource.MaxHealth); 
+        }
     }
 
-    public void SetMaxHealth(float maxHealth) => _maxHealth = maxHealth;
-    public void SetTarget(Transform target) => _target = target;
-
-    public bool TakeDamageToDie(float amount)
+    private void UpdateBar(float currentHealth, float maxHealth)
     {
-        _currentHealth -= amount;
-
-        if (_currentHealth <= 0)
-            return true;
-
-        _currentHealth = Mathf.Max(_currentHealth, 0);
-        UpdateBar();
-        return false;
-    }
-
-
-    public void Heal(float amount)
-    {
-        _currentHealth += amount;
-        _currentHealth = Mathf.Min(_currentHealth, 100);
-        UpdateBar();
-    }
-    private void UpdateBar()
-    {
-        float ratio = _currentHealth / _maxHealth;
+        float ratio = currentHealth / maxHealth;
         _fillTransform.localScale = new Vector3(ratio, 1, 1);
     }
+
+    public void SetTarget(Transform target) => _target = target;
+
 
     void LateUpdate()
     {

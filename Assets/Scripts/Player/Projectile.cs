@@ -9,7 +9,7 @@ public class Projectile : PoolableObject
     [SerializeField] private GameObject _hitEffect;
 
     private float _speed;
-    private int _damage;
+    private float _damage;
 
     private Transform _target;
     private Coroutine _returnCoroutine;
@@ -31,7 +31,7 @@ public class Projectile : PoolableObject
 
     }
 
-    public void Initialize(Transform target, float speed, int damage)
+    public void Initialize(Transform target, float speed, float damage)
     {
         _target = target;
         _speed = speed;

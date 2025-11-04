@@ -25,4 +25,9 @@ public class DamagePopup : PoolableObject
                 ReturnToPool();
             });
     }
+
+    private void OnDestroy()
+    {
+        _sequence?.Kill();
+    }
 }

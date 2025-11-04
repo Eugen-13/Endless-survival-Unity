@@ -1,23 +1,26 @@
 using DG.Tweening;
+using System;
 using System.Collections;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class TriangleEnemyBehaviour : PoolableObject
+public class TriangleEnemyBehaviour : PoolableObject, IHealth
 {
 
     [Header("Attack Settings")]
     [SerializeField] private float _attackRange = 1f;
     [SerializeField] private float _attackCooldown = 1f;
-    [SerializeField] private int _damage = 10;
+    [SerializeField] private float _damage = 10;
 
     [Header("Movement")]
     [SerializeField] private float _agentSpeed = 5f;
     [SerializeField] private float _repelRadius = 1f;
     [SerializeField] private float _repelForce = 1.5f;
 
-    [SerializeField] private int _health = 5;
+    [SerializeField] private float _maxHealth = 5;
+    [SerializeField] private float _currentHealth;
 
     [SerializeField] private LayerMask _enemyLayer;
 
@@ -31,30 +34,47 @@ public class TriangleEnemyBehaviour : PoolableObject
     private Sequence _sequence;
     private Tween _rotationTween;
 
+    public event Action<float, float> OnHealthChanged;
+
     public NavMeshAgent Agent => _agent;
     public float RepelRadius => _repelRadius;
     public float RepelForce => _repelForce;
-    public float Health => _health;
-    public void SetHealth(int health) => _health = health;
-    public void SetHealthBar(HealthBarFollow healthBar) => _healthBar = healthBar;
 
+    public float MaxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
 
-    void Start()
+    public float CurrentHealth => _currentHealth;
+
+    public void Initalice(EnemyStats enemyStats)
     {
+        _agentSpeed = enemyStats.Speed;
+        _agent.speed = enemyStats.Speed;
 
+        _maxHealth = enemyStats.Health;
+        _currentHealth = enemyStats.Health;
+
+        _damage = enemyStats.Damage;
+        _attackCooldown = enemyStats.AtackCooldawn;
+    }
+    public void SetHealthBarSource(HealthBarFollow source)
+    {
+        _healthBar = source;
+        _healthBar.SetHealthSource(this);
+    }
+
+
+    private void Awake()
+    {
         _agent = GetComponent<NavMeshAgent>();
-
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
-
         _agent.radius = 0.5f;
         _agent.speed = _agentSpeed;
         _agent.angularSpeed = 1000f;
         _agent.acceleration = 8f;
         _agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-
-        _attackRangeSqr = _attackRange * _attackRange;
-
+    }
+    void Start()
+    {
         var spriteRender = GetComponent<SpriteRenderer>();
         _sequence = DOTween.Sequence();
         _sequence.Append(transform.DOScale(0.2f, 0.1f));
@@ -71,12 +91,15 @@ public class TriangleEnemyBehaviour : PoolableObject
                 .SetEase(Ease.Linear);
         }
 
+
         _player = Player.Instance.transform;
 
     }
     private void OnEnable()
     {
         _rotationTween?.Play();
+        _attackRangeSqr = _attackRange * _attackRange;
+        _currentHealth = _maxHealth;
     }
     private void OnDisable()
     {
@@ -130,21 +153,31 @@ public class TriangleEnemyBehaviour : PoolableObject
         _isAttacking = false;
     }
 
-    public void TakeDamage(int amount)
-    {
-        DamagePopupManager.Instance.ShowPopup(amount, transform.position, Color.white);
-        if (_healthBar.TakeDamageToDie(amount))
-        {
-            ReturnToPool();
-            ExperienceManager.Instance.TrySpawnCrystal(_health, transform.position, Vector2.one);
-        }
-    }
-
-
     public override void ReturnToPool()  
     {
         EnemyManager.Unregister(this);
         _healthBar.ReturnToPool();
         base.ReturnToPool();
-    } 
+    }
+
+    public void TakeDamage(float amount)
+    {
+        _currentHealth -= amount;
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
+
+        DamagePopupManager.Instance.ShowPopup((int)amount, transform.position, Color.white);
+
+        if (_currentHealth <= 0)
+        {
+            ReturnToPool();
+            ExperienceManager.Instance.TrySpawnCrystal((int)_maxHealth, transform.position, Vector2.one);
+        }
+    }
+
+    public void Heal(float amount)
+    {
+        _currentHealth = Mathf.Min(_currentHealth + amount, _maxHealth);
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
+    }
 }

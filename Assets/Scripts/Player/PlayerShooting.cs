@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public class PlayerShooting : MonoBehaviour
 {
     private InputSystem _inputSystem;
@@ -11,14 +10,10 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private float _detectionRadius = 9f;
 
 
-    [SerializeField] private float _fireRate = 0.3f;
-    [SerializeField] private float _bulletSpeed = 25f;
-    [SerializeField] private int _damage = 5;
-
-
     private float _nextFireTime;
     // private bool _isShooting;
     private Transform _currentTarget;
+    private Player _player;
 
     private string _poolName = "BulletPool";
 
@@ -32,6 +27,7 @@ public class PlayerShooting : MonoBehaviour
 
 
         PoolManager.Instance.CreatePool(_poolName, _projectilePrefab, 100);
+        _player = Player.Instance;
     }
 
     void Update()
@@ -79,7 +75,7 @@ public class PlayerShooting : MonoBehaviour
             if (Time.time >= _nextFireTime)
             {
                 Shoot();
-                _nextFireTime = Time.time + _fireRate;
+                _nextFireTime = Time.time + _player.FireRate;
             }
         }
         else
@@ -90,7 +86,7 @@ public class PlayerShooting : MonoBehaviour
     {
         var projectile = PoolManager.Instance.Get(_poolName, _firePoint.position, Quaternion.identity);
         var bullet = projectile.GetComponent<Projectile>();
-        bullet.Initialize(_currentTarget, _bulletSpeed, _damage);
+        bullet.Initialize(_currentTarget, _player.BulletSpeed, _player.Damage);
     }
 
 }

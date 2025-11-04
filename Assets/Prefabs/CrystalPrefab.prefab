@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1fc828bf6bc94cc4bbf56f01348ab08e, type: 2}
+  - {fileID: 2100000, guid: 71cfdd8fab7919c42a7fa34f03178065, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -122,4 +122,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _expCount: 0
-  _picktUpRadius: 1
+  _magnetSpeed: 10

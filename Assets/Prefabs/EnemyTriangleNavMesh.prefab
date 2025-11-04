@@ -107,7 +107,8 @@ MonoBehaviour:
   _agentSpeed: 5
   _repelRadius: 2
   _repelForce: 3
-  _health: 5
+  _maxHealth: 5
+  _currentHealth: 0
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 256
