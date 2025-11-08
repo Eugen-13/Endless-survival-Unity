@@ -13,7 +13,7 @@ public class DamagePopup : PoolableObject
         _text.text = "-" + damage.ToString();
         _text.color = color;
         _sequence?.Kill();
-  
+
         Vector3 startPos = transform.position;
 
         _sequence = DOTween.Sequence()
@@ -21,10 +21,28 @@ public class DamagePopup : PoolableObject
                 .SetEase(Ease.InCubic))
             .OnComplete(() =>
             {
-                _text.alpha = 1f; 
+                _text.alpha = 1f;
                 ReturnToPool();
             });
     }
+    public void Show(string text, Color color)
+    {
+        _text.text = text;
+        _text.color = color;
+        _sequence?.Kill();
+
+        Vector3 startPos = transform.position;
+
+        _sequence = DOTween.Sequence()
+            .Append(_text.DOFade(0f, _fadeDuration)
+                .SetEase(Ease.InCubic))
+            .OnComplete(() =>
+            {
+                _text.alpha = 1f;
+                ReturnToPool();
+            });
+    }
+
 
     private void OnDestroy()
     {

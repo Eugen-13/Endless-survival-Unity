@@ -7,6 +7,7 @@ public class Player: MonoBehaviour, IHealth
 
     [Header("Base stats")]
     [SerializeField] private float _fireRate = 1.6f;
+    [SerializeField] private int _projectileCount = 1;
     [SerializeField] private float _bulletSpeed = 15f;
     [SerializeField] private float _damage = 5;
     [SerializeField] private float _speed = 10f;
@@ -23,6 +24,7 @@ public class Player: MonoBehaviour, IHealth
     public float CurrentHealth { get { return _currentHealth; } set { _currentHealth = value; } }
     public float FireRate { get { return _fireRate; } set { _fireRate = value; } }
     public float BulletSpeed { get { return _bulletSpeed; } set { _bulletSpeed = value; } }
+    public int ProjectileCount { get { return _projectileCount; } set { _projectileCount = value; } }
     public float Damage { get { return _damage; } set { _damage = value; } }
 
     [Header("Level Settings")]
@@ -37,7 +39,7 @@ public class Player: MonoBehaviour, IHealth
     private PlayerMovement _playerMovement; 
     private PlayerShooting _playerShooting;
     
-    private GameObject _healthBar;
+    private HealthBarFollow _healthBar;
 
     [SerializeField] private GameObject _HealthBarPrefab;
 
@@ -61,9 +63,9 @@ public class Player: MonoBehaviour, IHealth
         _playerMovement = GetComponent<PlayerMovement>();
         _playerShooting = GetComponent<PlayerShooting>();
 
-        _healthBar = Instantiate(_HealthBarPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
-        _healthBar.GetComponent<HealthBarFollow>().SetTarget(transform);
-        _healthBar.GetComponent<HealthBarFollow>().SetHealthSource(this);
+        _healthBar = (Instantiate(_HealthBarPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity)).GetComponent<HealthBarFollow>();
+        _healthBar.SetTarget(transform);
+        _healthBar.SetHealthSource(this);
     }
 
     public void AddExperience(int amount)

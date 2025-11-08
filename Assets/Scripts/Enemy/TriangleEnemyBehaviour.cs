@@ -146,6 +146,8 @@ public class TriangleEnemyBehaviour : PoolableObject, IHealth
 
         _player.GetComponent<Player>().TakeDamage(_damage);
 
+        DamagePopupManager.Instance.ShowPopup((int)_damage, _player.position, Color.red);
+
         yield return new WaitForSeconds(0.3f);
 
         _agent.isStopped = false;

@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 public class PlayerShooting : MonoBehaviour
 {
     private InputSystem _inputSystem;
@@ -12,7 +15,7 @@ public class PlayerShooting : MonoBehaviour
 
     private float _nextFireTime;
     // private bool _isShooting;
-    private Transform _currentTarget;
+    private Transform[] _currentTargets;
     private Player _player;
 
     private string _poolName = "BulletPool";
@@ -33,60 +36,80 @@ public class PlayerShooting : MonoBehaviour
     void Update()
     {
         FindClosestVisibleEnemy();
-        RotateTowardsTarget();
+        ShootToTargets();
     }
 
     void FindClosestVisibleEnemy()
     {
-        float closestDistance = Mathf.Infinity;
-        Transform nearest = null;
+
+        Dictionary<Transform, float> targets = new Dictionary<Transform, float>();
         foreach (var enemy in EnemyManager.Enemies)
         {
             if (enemy == null) continue;
 
-            float distance = Vector2.Distance(transform.position, enemy.position);
-            if (distance < _detectionRadius && distance < closestDistance)
+            float distance = (transform.position - enemy.position).sqrMagnitude;
+
+            if (distance < (_detectionRadius * _detectionRadius))
             {
-                Vector2 dir = (enemy.position - transform.position).normalized;
+                targets.Add(enemy, distance);
+            }
+        }
 
-                int layerMask = ~LayerMask.GetMask("Player");
+        int min = Math.Min(targets.Count, Player.Instance.ProjectileCount);
+        _currentTargets = new Transform[min];
 
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, layerMask);
 
-                
-                if (hit && hit.collider.transform == enemy)
+        for (int i = 0; i < _currentTargets.Length; i++)
+        {
+            float closestDistance = Mathf.Infinity;
+            foreach (var enemy in targets)
+            {
+                if (enemy.Key == null) continue;
+
+                float distance = enemy.Value;
+                if (distance < closestDistance)
                 {
-                    closestDistance = distance;
-                    nearest = enemy;
+                    Vector2 dir = (enemy.Key.position - transform.position).normalized;
+
+                    int layerMask = ~LayerMask.GetMask("Player");
+
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, layerMask);
+
+                    if (hit && _currentTargets.Contains(hit.collider.transform))
+                        continue;
+
+                    if (hit && hit.collider.transform == enemy.Key)
+                    {
+                        closestDistance = distance;
+                        _currentTargets[i] = enemy.Key;
+                    }
                 }
             }
         }
 
-        _currentTarget = nearest;
     }
 
-    void RotateTowardsTarget()
+    void ShootToTargets()
     {
-        if (_currentTarget != null)
+        if (Time.time >= _nextFireTime)
         {
-            var dir = _currentTarget.position - transform.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-            tower.rotation = Quaternion.Euler(0, 0, angle);
-            if (Time.time >= _nextFireTime)
+            for (int i = 0; i < _currentTargets.Length; i++)
             {
-                Shoot();
-                _nextFireTime = Time.time + _player.FireRate;
-            }
-        }
-        else
-            tower.rotation = Quaternion.Lerp(tower.rotation, transform.rotation, 10f * Time.deltaTime);
-    }
+                if (_currentTargets[i] != null)
+                {
+                    Shoot(_currentTargets[i]);
+                    _nextFireTime = Time.time + _player.FireRate;
 
-    private void Shoot()
+                }
+            }
+        }   
+    }
+    private void Shoot(Transform target)
     {
+        Debug.Log(target.position);
         var projectile = PoolManager.Instance.Get(_poolName, _firePoint.position, Quaternion.identity);
         var bullet = projectile.GetComponent<Projectile>();
-        bullet.Initialize(_currentTarget, _player.BulletSpeed, _player.Damage);
+        bullet.Initialize(target, _player.BulletSpeed, _player.Damage);
     }
 
 }

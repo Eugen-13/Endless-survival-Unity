@@ -29,4 +29,8 @@ public class DamagePopupManager : MonoBehaviour
     {
         PoolManager.Instance.Get(_popupPoolName, position + Vector3.up * offset, Quaternion.identity).GetComponent<DamagePopup>().Show(damage, color);
     }
+    public void ShowPopup(string text, Vector3 position, Color color)
+    {
+        PoolManager.Instance.Get(_popupPoolName, position + Vector3.up * offset, Quaternion.identity).GetComponent<DamagePopup>().Show(text, color);
+    }
 }
