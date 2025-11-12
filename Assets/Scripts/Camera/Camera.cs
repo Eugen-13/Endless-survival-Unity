@@ -7,7 +7,7 @@ public class Camera : MonoBehaviour
     void Start()
     {
         _vcam = GetComponent<CinemachineVirtualCamera>();
-        _vcam.Follow = Player.Instance.transform;
+        _vcam.Follow = Player.Instance.transform    ;
     }
 
 }

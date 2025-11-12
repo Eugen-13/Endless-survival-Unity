@@ -106,7 +106,6 @@ public class PlayerShooting : MonoBehaviour
     }
     private void Shoot(Transform target)
     {
-        Debug.Log(target.position);
         var projectile = PoolManager.Instance.Get(_poolName, _firePoint.position, Quaternion.identity);
         var bullet = projectile.GetComponent<Projectile>();
         bullet.Initialize(target, _player.BulletSpeed, _player.Damage);

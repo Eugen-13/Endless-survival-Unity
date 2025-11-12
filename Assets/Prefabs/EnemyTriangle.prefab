@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6492647002172740474}
   - component: {fileID: 6196055126351152051}
-  - component: {fileID: 2329162032690353908}
+  - component: {fileID: -1528607807381427898}
   - component: {fileID: 2676815233294001507}
   - component: {fileID: -7857441644962814653}
   m_Layer: 8
-  m_Name: EnemyTriangleNavMesh
+  m_Name: EnemyTriangle
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2329162032690353908
+--- !u!114 &-1528607807381427898
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5085538194642605940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec63750468cf62c4688152c64b489571, type: 3}
+  m_Script: {fileID: 11500000, guid: d5ac7d3700c189a4288e5895d1fc672b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _attackRange: 1
@@ -109,9 +109,6 @@ MonoBehaviour:
   _repelForce: 3
   _maxHealth: 5
   _currentHealth: 0
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!195 &2676815233294001507
 NavMeshAgent:
   m_ObjectHideFlags: 0

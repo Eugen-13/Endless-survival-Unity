@@ -51,7 +51,7 @@ public class Projectile : PoolableObject
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.TryGetComponent<TriangleEnemyBehaviour>(out TriangleEnemyBehaviour enemy))
+        if (collision.collider.TryGetComponent<EnemyBase>(out EnemyBase enemy))
         {
             enemy.TakeDamage(_damage);
             ReturnToPool();

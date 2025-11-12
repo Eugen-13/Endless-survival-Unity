@@ -1,0 +1,37 @@
+﻿using DG.Tweening;
+using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+
+
+public class TriangleEnemy : EnemyBase
+{
+    protected override void InitaliceAtackSequence()
+    {
+        var _spriteRenderer = GetComponent<SpriteRenderer>();
+        _attackSequence = DOTween.Sequence();
+        _attackSequence.Append(transform.DOScale(0.2f, 0.1f));
+        _attackSequence.Append(transform.DOScale(0.12f, 0.2f));
+        _attackSequence.Join(_spriteRenderer.DOColor(Color.red, 0.1f));
+        _attackSequence.Append(_spriteRenderer.DOColor(Color.white, 0.2f))
+        .Pause()
+        .SetAutoKill(false);
+    }
+    protected override void InitaliceMovementTween()
+    {
+        _movementTween = transform.DORotate(new Vector3(0, 0, 360), 2f, RotateMode.LocalAxisAdd)
+                .SetLoops(-1, LoopType.Restart)
+                .SetEase(Ease.Linear);
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _agent.radius = 0.5f;
+        _agent.speed = _agentSpeed;
+        _agent.angularSpeed = 1000f;
+        _agent.acceleration = 8f;
+        _agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+    }
+}

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 917acb78470316840808435564472be6
+guid: a6b2abd33ea979540b135388bb50fb81
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8588759270486237952
-    second: ExpBar 1_0
+      213: -3415312158800669560
+    second: cube_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ExpBar 1_0
+      name: cube_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 3760
-        height: 217
+        width: 822
+        height: 822
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,8 +127,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 00d135dd2f89ec880800000000000000
-      internalID: -8588759270486237952
+      spriteID: 8841d99cfaf5a90d0800000000000000
+      internalID: -3415312158800669560
       vertices: []
       indices: 
       edges: []
@@ -143,8 +143,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      ExpBar 1_0: -8588759270486237952
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

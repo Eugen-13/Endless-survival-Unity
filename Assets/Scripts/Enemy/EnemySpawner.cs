@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,7 +7,9 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private float _spawnDuration;
     [SerializeField] private GameObject _enemyTrianglePrefab;
-    [SerializeField] private GameObject _healthBarPrefab;
+    [SerializeField] private GameObject _healthBarPrefab ;
+
+    [SerializeField] private Dictionary<GameObject, float> spawnWeights;
 
     [Header("Enemy stats")]
     [SerializeField] private int _health;
@@ -46,12 +49,24 @@ public class EnemySpawner : MonoBehaviour
         var healthBar = (PoolManager.Instance.Get(_enemyHealthPoolName, enemy.transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity)).GetComponent<HealthBarFollow>();
         healthBar.SetTarget(enemy.transform);
 
-        var enemyBeh = enemy.GetComponent<TriangleEnemyBehaviour>();
+        var enemyBeh = enemy.GetComponent<EnemyBase>();
         enemyBeh.SetHealthBarSource(healthBar);
-        enemyBeh.Initalice(enemyStats);
+        enemyBeh.InitaliceStats(enemyStats);
 
         EnemyManager.Register(enemyBeh);
-        
+    }
+
+    private GameObject getRandomEnemy()
+    {
+        float sum = spawnWeights.Values.Sum();
+        foreach (var weight in spawnWeights)
+        {
+            sum -= weight.Value;
+            if (sum <= 0)
+                return weight.Key;
+        }
+
+        return null;
     }
 
     private EnemyStats GetEnemyStats()
