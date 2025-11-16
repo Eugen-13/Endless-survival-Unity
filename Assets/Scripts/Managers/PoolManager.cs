@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+
+[DefaultExecutionOrder(-1000)]
 public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance { get; private set; }

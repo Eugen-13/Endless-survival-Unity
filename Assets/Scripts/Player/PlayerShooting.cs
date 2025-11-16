@@ -6,9 +6,8 @@ public class PlayerShooting : MonoBehaviour
 {
     private InputSystem _inputSystem;
 
-
-    [SerializeField] private Transform tower;
     [SerializeField] private GameObject _projectilePrefab;
+    [SerializeField] private GameObject _hitEffect;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private float _detectionRadius = 9f;
 
@@ -19,6 +18,7 @@ public class PlayerShooting : MonoBehaviour
     private Player _player;
 
     private string _poolName = "BulletPool";
+    private string _hitEffectPool = "hitEffectPool1";
 
     void Start()
     {
@@ -30,6 +30,7 @@ public class PlayerShooting : MonoBehaviour
 
 
         PoolManager.Instance.CreatePool(_poolName, _projectilePrefab, 100);
+        PoolManager.Instance.CreatePool(_hitEffectPool, _hitEffect, 30);
         _player = Player.Instance;
     }
 
@@ -108,7 +109,7 @@ public class PlayerShooting : MonoBehaviour
     {
         var projectile = PoolManager.Instance.Get(_poolName, _firePoint.position, Quaternion.identity);
         var bullet = projectile.GetComponent<Projectile>();
-        bullet.Initialize(target, _player.BulletSpeed, _player.Damage);
+        bullet.Initialize(target, _player.BulletSpeed, _player.Damage, _hitEffectPool);
     }
 
 }

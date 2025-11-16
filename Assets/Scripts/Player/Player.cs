@@ -61,7 +61,7 @@ public class Player: MonoBehaviour, IHealth
     {
         _currentHealth = MaxHealth;
         _playerMovement = GetComponent<PlayerMovement>();
-        _playerShooting = GetComponent<PlayerShooting>();
+      //  _playerShooting = GetComponent<PlayerShooting>();
 
         _healthBar = (Instantiate(_HealthBarPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity)).GetComponent<HealthBarFollow>();
         _healthBar.SetTarget(transform);

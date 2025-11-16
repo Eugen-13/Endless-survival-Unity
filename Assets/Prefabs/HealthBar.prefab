@@ -220,3 +220,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fillRenderer: {fileID: 8839833193369056058}
   _offset: {x: 0, y: 0.8, z: 0}
+  _baseScale: 0.08

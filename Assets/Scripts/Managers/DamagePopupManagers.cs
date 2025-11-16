@@ -19,9 +19,6 @@ public class DamagePopupManager : MonoBehaviour
         }
 
         Instance = this;
-    }
-    private void Start()
-    {
         PoolManager.Instance.CreatePool(_popupPoolName, _popupPrefab.gameObject, _poolSize);
     }
 

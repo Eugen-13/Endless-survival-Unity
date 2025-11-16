@@ -134,6 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fillRenderer: {fileID: 4481492708841105171}
   _offset: {x: 0, y: 0.8, z: 0}
+  _baseScale: 0.14
 --- !u!1 &7064028526900025748
 GameObject:
   m_ObjectHideFlags: 0

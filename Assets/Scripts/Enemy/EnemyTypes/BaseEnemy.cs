@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class EnemyBase : PoolableObject, IHealth
+public abstract class BaseEnemy : PoolableObject, IHealth
 {
 
     [Header("Base stats")]
@@ -17,6 +17,32 @@ public abstract class EnemyBase : PoolableObject, IHealth
     [SerializeField] protected float _repelForce = 3f;
     [SerializeField] protected float _maxHealth = 5;
     [SerializeField] protected float _currentHealth;
+    [SerializeField] protected float _experience;
+
+    protected float Speed
+    {
+        set
+        {
+            _agentSpeed = value;
+            _agent.speed = value;
+        }
+    }
+    protected float Health
+    {
+        set
+        {
+            _maxHealth = value;
+            _currentHealth = value;
+        }
+    }
+    protected float AttackRange
+    {
+        set
+        {
+            _attackRange = value;
+            _attackRangeSqr = value * value;
+        }
+    }
 
 
     protected float _lastAttackTime;
@@ -44,39 +70,40 @@ public abstract class EnemyBase : PoolableObject, IHealth
 
     public virtual void InitaliceStats(EnemyStats enemyStats)
     {
-        _agentSpeed = enemyStats.Speed;
-        _agent.speed = enemyStats.Speed;
+        this.Speed = enemyStats.Speed;
 
-        _maxHealth = enemyStats.Health;
-        _currentHealth = enemyStats.Health;
+        this.Health = enemyStats.Health;
 
         _damage = enemyStats.Damage;
         _attackCooldown = enemyStats.AtackCooldawn;
+
+        _attackRangeSqr = _attackRange * _attackRange;
+        _currentHealth = _maxHealth;
+        _experience = enemyStats.Experience;
     }
-    public void SetHealthBarSource(HealthBarFollow source)
+    public void SetHealthBarSource(HealthBarFollow source, float scàle = 1f)
     {
         _healthBar = source;
-        _healthBar.SetHealthSource(this);
+        _healthBar.SetHealthSource(this, scàle);
     }
 
     protected virtual void InitaliceAtackSequence() { _attackSequence = null; }
     protected virtual void InitaliceMovementTween() { _movementTween = null; }
     protected virtual void Awake()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
-
         _agent.radius = 0.5f;
-        _agent.speed = _agentSpeed;
+        _agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
         _agent.angularSpeed = 1000f;
         _agent.acceleration = 8f;
-        _agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
     }
     protected virtual void Start()
     {
-        InitaliceAtackSequence();
 
+        InitaliceAtackSequence();
         InitaliceMovementTween();
         _movementTween?.Play();
 
@@ -86,8 +113,6 @@ public abstract class EnemyBase : PoolableObject, IHealth
     protected virtual void OnEnable()
     {
         _movementTween?.Play();
-        _attackRangeSqr = _attackRange * _attackRange;
-        _currentHealth = _maxHealth;
     }
     protected virtual void OnDisable()
     {
@@ -129,6 +154,8 @@ public abstract class EnemyBase : PoolableObject, IHealth
         if (_attackSequence != null)
             _attackSequence.Restart();
 
+
+
         _player.GetComponent<Player>().TakeDamage(_damage);
 
         DamagePopupManager.Instance.ShowPopup((int)_damage, _player.position, Color.red);
@@ -139,9 +166,6 @@ public abstract class EnemyBase : PoolableObject, IHealth
         _lastAttackTime = Time.time;
         _isAttacking = false;
     }
-
-
-
     public virtual void TakeDamage(float amount)
     {
         _currentHealth -= amount;
@@ -163,8 +187,6 @@ public abstract class EnemyBase : PoolableObject, IHealth
         ReturnToPool();
         ExperienceManager.Instance.TrySpawnCrystal((int)_maxHealth, transform.position, Vector2.one);
     }
-
-
     public override void ReturnToPool()
     {
         EnemyManager.Unregister(this);

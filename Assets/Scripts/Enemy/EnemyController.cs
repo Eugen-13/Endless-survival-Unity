@@ -5,19 +5,13 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         var enemies = EnemyManager.Behaviours;
-        int count = enemies.Count;
-
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            if (i >= enemies.Count) break;
-
             var e1 = enemies[i];
             e1.Behavior();
 
-            for (int j = i + 1; j < count; j++)
+            for (int j = i + 1; j < enemies.Count; j++)
             {
-                if (j >= enemies.Count) break;
-
                 var e2 = enemies[j];
                 Vector2 diff = e1.transform.position - e2.transform.position;
                 float dist = diff.magnitude;

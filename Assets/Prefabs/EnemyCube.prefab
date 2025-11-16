@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2977996504408978959}
   - component: {fileID: 6971794000471835191}
-  - component: {fileID: 4321177726497941440}
+  - component: {fileID: 4892898604224484026}
   - component: {fileID: 96422748524291741}
-  - component: {fileID: 2214667051462780035}
+  - component: {fileID: -7466309945540747996}
   m_Layer: 8
   m_Name: EnemyCube
   m_TagString: Enemy
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.569211, y: -4.626353, z: 0}
-  m_LocalScale: {x: 0.12, y: 0.12, z: 0.12}
+  m_LocalScale: {x: 0.18, y: 0.18, z: 0.18}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4321177726497941440
+--- !u!114 &4892898604224484026
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 76930082206937203}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec63750468cf62c4688152c64b489571, type: 3}
+  m_Script: {fileID: 11500000, guid: d2921a83ad7428a47ab5562a50570619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _attackRange: 1
@@ -109,9 +109,11 @@ MonoBehaviour:
   _repelForce: 3
   _maxHealth: 5
   _currentHealth: 0
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
+  _lungeDistance: 5
+  _lungeDuration: 0.18
+  _backDuration: 0.25
+  _turnDuringLunge: 180
+  _preLungeDelay: 0.3
 --- !u!195 &96422748524291741
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -134,7 +136,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!58 &2214667051462780035
+--- !u!58 &-7466309945540747996
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,4 +171,4 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 4
+  m_Radius: 4.4

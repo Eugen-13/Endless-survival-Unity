@@ -19,6 +19,7 @@ public class ExperienceManager : MonoBehaviour
         }
 
         Instance = this;
+        PoolManager.Instance.CreatePool(_crystalPoolName, _crystalPrefab.gameObject, _poolSize);
     }
 
     public void TrySpawnCrystal(int exp, Vector3 position, Vector2 scale)
@@ -29,10 +30,5 @@ public class ExperienceManager : MonoBehaviour
             var crystal = PoolManager.Instance.Get(_crystalPoolName, position, Quaternion.identity);
             crystal.GetComponent<ExperienceCrystal>().SetExpCount(exp);
         }
-    }
-
-    private void Start()
-    {
-        PoolManager.Instance.CreatePool(_crystalPoolName, _crystalPrefab.gameObject, _poolSize);
     }
 }

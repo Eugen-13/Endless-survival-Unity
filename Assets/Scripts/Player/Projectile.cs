@@ -6,7 +6,6 @@ public class Projectile : PoolableObject
 {
 
     [SerializeField] private float _lifetime = 2f;
-    [SerializeField] private GameObject _hitEffect;
 
     private float _speed;
     private float _damage;
@@ -14,6 +13,7 @@ public class Projectile : PoolableObject
     private Transform _target;
     private Coroutine _returnCoroutine;
     private Rigidbody2D _rb;
+    private string _hitEffectPool;
 
 
     private void Awake()
@@ -31,11 +31,12 @@ public class Projectile : PoolableObject
 
     }
 
-    public void Initialize(Transform target, float speed, float damage)
+    public void Initialize(Transform target, float speed, float damage, string hitEffectPoolName)
     {
         _target = target;
         _speed = speed;
         _damage = damage;
+        _hitEffectPool = hitEffectPoolName;
 
         if (_returnCoroutine != null)
             StopCoroutine(_returnCoroutine);
@@ -51,12 +52,11 @@ public class Projectile : PoolableObject
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.TryGetComponent<EnemyBase>(out EnemyBase enemy))
+        if (collision.collider.TryGetComponent<BaseEnemy>(out BaseEnemy enemy))
         {
             enemy.TakeDamage(_damage);
             ReturnToPool();
-            if (_hitEffect != null)
-                Instantiate(_hitEffect, transform.position, transform.rotation);
+            PoolManager.Instance.Get(_hitEffectPool, transform.position, transform.rotation);
         }
     }
 

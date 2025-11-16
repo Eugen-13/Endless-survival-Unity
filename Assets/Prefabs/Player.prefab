@@ -105,8 +105,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75bb9962e0ffd248b8dbe58257a88fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fireRate: 1.6
+  _projectileCount: 1
+  _bulletSpeed: 15
+  _damage: 5
   _speed: 7
-  _health: 100
+  _maxHealth: 1000
+  _currentHealth: 0
   _pickUpRadius: 2
   _level: 1
   _currentExp: 0
@@ -141,9 +146,6 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 6612088908946106702, guid: d4fefaaccb4c3404e8067f3683652f8e, type: 3}
   _firePoint: {fileID: 7186398898173208981}
   _detectionRadius: 10
-  _fireRate: 1
-  _bulletSpeed: 15
-  _damage: 5
 --- !u!50 &8268569954800801212
 Rigidbody2D:
   serializedVersion: 4

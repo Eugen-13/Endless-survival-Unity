@@ -4,9 +4,9 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     public static readonly List<Transform> Enemies = new();
-    public static readonly List<EnemyBase> Behaviours = new();
+    public static readonly List<BaseEnemy> Behaviours = new();
 
-    public static void Register(EnemyBase enemy)
+    public static void Register(BaseEnemy enemy)
     {
         if (!Enemies.Contains(enemy.transform))
             Enemies.Add(enemy.transform);
@@ -15,7 +15,7 @@ public class EnemyManager : MonoBehaviour
             Behaviours.Add(enemy);
     }
 
-    public static void Unregister(EnemyBase enemy)
+    public static void Unregister(BaseEnemy enemy)
     {
         Enemies.Remove(enemy.transform);
         Behaviours.Remove(enemy);

@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.Enemy
+public class CircleEnemy : BaseEnemy
 {
-    internal class StarEnemy
-    {
-    }
+
 }
