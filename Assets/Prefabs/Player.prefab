@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 857321444136752817}
   - component: {fileID: 2197408112690892862}
   - component: {fileID: 1894415829639623118}
-  - component: {fileID: 2163138069979422723}
-  - component: {fileID: 7869115235500044148}
   - component: {fileID: 8268569954800801212}
   - component: {fileID: 7248085054007553693}
   m_Layer: 6
@@ -113,39 +111,12 @@ MonoBehaviour:
   _maxHealth: 1000
   _currentHealth: 0
   _pickUpRadius: 2
+  _detectionRadius: 10
   _level: 1
   _currentExp: 0
   _expToNextLevel: 100
   _nextLevelMultip: 1.5
-  _HealthBarPrefab: {fileID: 3050234777070057970, guid: f64cb9c29ff65e24da05d1da32e257f6, type: 3}
---- !u!114 &2163138069979422723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076259224762726263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b22774a1a1fdf504989cab2d912e0823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7869115235500044148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076259224762726263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f1608a437814f248a57fd30478ce012, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tower: {fileID: 4438026007047068869}
-  _projectilePrefab: {fileID: 6612088908946106702, guid: d4fefaaccb4c3404e8067f3683652f8e, type: 3}
-  _firePoint: {fileID: 7186398898173208981}
-  _detectionRadius: 10
+  _healthBarPrefab: {fileID: 0}
 --- !u!50 &8268569954800801212
 Rigidbody2D:
   serializedVersion: 4

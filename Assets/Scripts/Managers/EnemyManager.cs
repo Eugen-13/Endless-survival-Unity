@@ -1,29 +1,36 @@
 ﻿using System.Collections.Generic;
+using EnemyTypes;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+namespace Managers
 {
-    public static readonly List<Transform> Enemies = new();
-    public static readonly List<BaseEnemy> Behaviours = new();
-
-    public static void Register(BaseEnemy enemy)
+    public class EnemyManager
     {
-        if (!Enemies.Contains(enemy.transform))
-            Enemies.Add(enemy.transform);
+        private readonly List<Transform> _enemies = new();
+        private readonly List<BaseEnemy> _behaviours = new();
+        
+        public List<Transform> Enemies => _enemies;
+        public List<BaseEnemy>  Behaviours => _behaviours;
 
-        if (!Behaviours.Contains(enemy))
-            Behaviours.Add(enemy);
-    }
+        public void Register(BaseEnemy enemy)
+        {
+            if (!_enemies.Contains(enemy.transform))
+                _enemies.Add(enemy.transform);
 
-    public static void Unregister(BaseEnemy enemy)
-    {
-        Enemies.Remove(enemy.transform);
-        Behaviours.Remove(enemy);
-    }
+            if (!_behaviours.Contains(enemy))
+                _behaviours.Add(enemy);
+        }
 
-    public static void Clear()
-    {
-        Enemies.Clear();
-        Behaviours.Clear();
+        public void Unregister(BaseEnemy enemy)
+        {
+            _enemies.Remove(enemy.transform);
+            _behaviours.Remove(enemy);
+        }
+
+        public void Clear()
+        {
+            _enemies.Clear();
+            _behaviours.Clear();
+        }
     }
 }

@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifetime: 3
-  _hitEffect: {fileID: 6333192561626616092, guid: ed72bb656489eb141b1686e140341542, type: 3}
+  _rb: {fileID: 3277916348888397176}
 --- !u!96 &1076083842564633098
 TrailRenderer:
   serializedVersion: 3

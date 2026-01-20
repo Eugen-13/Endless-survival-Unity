@@ -1,44 +1,52 @@
-﻿using DG.Tweening;
+﻿using Core.ObjectPool;
+using DG.Tweening;
+using PlayerSystem;
 using UnityEngine;
+using Zenject;
 
-
-public class ExperienceCrystal : PoolableObject
+namespace Collectables
 {
-    [SerializeField] private int _expCount;
-    [SerializeField] private float _magnetSpeed = 10f;
-    private Sequence _sequence;
-
-    private Transform _player;
-    private float _pickUpRadius;
-    private float _pickUpRadiusSqr;
-
-    public void SetExpCount(int expCount) => _expCount = expCount;
-
-    private void Start()
+    public class ExperienceCrystal : PoolableObject
     {
-        _player = Player.Instance.transform;
-        _pickUpRadius = Player.Instance.PickUpRadius;
-        _pickUpRadiusSqr = _pickUpRadius * _pickUpRadius;
-    }
+        private int _expCount;
+        private float _magnetSpeed;
+        private Sequence _sequence;
+        
+        private float _pickUpRadius;
+        private float _pickUpRadiusSqr;
 
-    private void FixedUpdate()
-    {
-        if (!_player) return;
+        [Inject] private Player _player;
+
+        public void Init(int expCount, float magnetSpeed)
+        {
+            _expCount = expCount;
+            _magnetSpeed = magnetSpeed;
+        }
+
+        private void Start()
+        {
+            _pickUpRadius = _player.PickUpRadius;
+            _pickUpRadiusSqr = _pickUpRadius * _pickUpRadius;
+        }
+
+        private void FixedUpdate()
+        {
+            if (!_player) return;
 
         
-        float sqr = (transform.position - _player.transform.position).sqrMagnitude;
+            float sqr = (transform.position - _player.transform.position).sqrMagnitude;
 
-        if (sqr <= 0.1)
-        {
-            ReturnToPool();
-            Player.Instance.AddExperience(_expCount);
-        }
+            if (sqr <= 0.1)
+            {
+                ReturnToPool();
+                _player.AddExperience(_expCount);
+            }
 
-        if (sqr < _pickUpRadiusSqr)
-        {
+            if (!(sqr < _pickUpRadiusSqr)) return;
+            
             Vector2 dir = (_player.transform.position - transform.position).normalized;
-            transform.position += (Vector3)(dir * _magnetSpeed * Time.fixedDeltaTime);
+            transform.position += (Vector3)(dir * (_magnetSpeed * Time.fixedDeltaTime));
         }
-    }
 
+    }
 }

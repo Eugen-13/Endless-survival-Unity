@@ -3,6 +3,6 @@
     public float Health;
     public float Speed;
     public float Damage;
-    public float AtackCooldawn;
+    public float AttackCooldown;
     public float Experience;
 }

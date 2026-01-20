@@ -1,49 +1,64 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using Managers;
+using PlayerSystem;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+using Zenject;
 
-public class UpgradeButton : MonoBehaviour
+namespace UI
 {
-    [Header("UI References")]
-    public Image iconImage;
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI descriptionText;
-    public TextMeshProUGUI levelText;
-    public Button button;
-
-    private UpgradeData currentUpgrade;
-
-    void Awake()
+    public class UpgradeButton : MonoBehaviour
     {
-        button.onClick.AddListener(OnButtonClick);
-    }
+        [FormerlySerializedAs("iconImage")]
+        [Header("UI References")]
+        [SerializeField] private Image _iconImage;
+        [SerializeField] private TextMeshProUGUI _nameText;
+        [SerializeField] private TextMeshProUGUI _descriptionText;
+        [SerializeField] private TextMeshProUGUI _levelText;
+        [SerializeField] private Button _button;
 
-    public void SetupButton(UpgradeData upgrade, int currentLevel)
-    {
-        currentUpgrade = upgrade;
+        private UpgradeData currentUpgrade;
+        private UpgradeManager _upgradeManager;
 
-        iconImage.sprite = upgrade.icon;
-        nameText.text = upgrade.upgradeName;
-
-        string levelInfo = currentLevel > 0 ? $" (Ур. {currentLevel} → {currentLevel + 1})" : " (Новое!)";
-        descriptionText.text = upgrade.description + "\n+" + upgrade.value + levelInfo;
-
-        if (currentLevel > 0)
+        [Inject]
+        public void Construct(UpgradeManager upgradeManager)
         {
-            levelText.text = $"Уровень: {currentLevel}/{upgrade.maxLevel}";
-            levelText.gameObject.SetActive(true);
+            _upgradeManager = upgradeManager;
         }
-        else
-        {
-            levelText.gameObject.SetActive(false);
-        }
-    }
 
-    void OnButtonClick()
-    {
-        if (currentUpgrade != null)
+        private void Awake()
         {
-            UpgradeManager.Instance.SelectUpgrade(currentUpgrade);
+            _button.onClick.AddListener(OnButtonClick);
+        }
+
+        public void SetupButton(UpgradeData upgrade, int currentLevel)
+        {
+            currentUpgrade = upgrade;
+
+            _iconImage.sprite = upgrade.icon;
+            _nameText.text = upgrade.upgradeName;
+
+            string levelInfo = currentLevel > 0 ? $" (Ур. {currentLevel} → {currentLevel + 1})" : " (Новое!)";
+            _descriptionText.text = upgrade.description + "\n+" + upgrade.value + levelInfo;
+
+            if (currentLevel > 0)
+            {
+                _levelText.text = $"Уровень: {currentLevel}/{upgrade.maxLevel}";
+                _levelText.gameObject.SetActive(true);
+            }
+            else
+            {
+                _levelText.gameObject.SetActive(false);
+            }
+        }
+
+        private void OnButtonClick()
+        {
+            if (currentUpgrade != null)
+            {
+                _upgradeManager.SelectUpgrade(currentUpgrade);
+            }
         }
     }
 }

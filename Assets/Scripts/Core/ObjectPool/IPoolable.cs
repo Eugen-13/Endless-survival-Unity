@@ -1,5 +1,8 @@
-﻿public interface IPoolable
+﻿namespace Core.ObjectPool
 {
-    void SetPoolName(string poolName);
-    void ReturnToPool();
+    public interface IPoolable
+    {
+        void SetPoolName(string poolName);
+        void ReturnToPool();
+    }
 }

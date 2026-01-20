@@ -1,27 +1,27 @@
-﻿using UnityEngine;
-public class UIManager : MonoBehaviour
+﻿using UI;
+using UnityEngine;
+using Zenject;
+
+namespace Managers
 {
-    public static UIManager Instance;
-
-    [SerializeField] private UIXPPanel uIXPPanel;
-
-    private void Awake()
+    public class UIManager
     {
-        if (Instance != null)
+        private UIXpPanel _xpPanel;
+
+        [Inject]
+        private void Construct(UIXpPanel xpPanel)
         {
-            Destroy(gameObject);
-            return;
+            _xpPanel = xpPanel;
+        }
+        
+        public void UpdateXp(float current, float required)
+        {
+            _xpPanel.UpdateXp(current, required);
         }
 
-        Instance = this;
-    }
-    public void UpdateXP(float current, float required)
-    {
-        uIXPPanel.UpdateXP(current, required);
-    }
-
-    public void UpdateLevel(int level)
-    {
-        uIXPPanel.UpdateLevel(level);
+        public void UpdateLevel(int level)
+        {
+            _xpPanel.UpdateLevel(level);
+        }
     }
 }

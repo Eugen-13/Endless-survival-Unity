@@ -1,22 +1,28 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
+using Zenject;
 
-public abstract class PoolableObject : MonoBehaviour, IPoolable
+namespace Core.ObjectPool
 {
-    protected string _poolName;
-
-    public virtual void SetPoolName(string poolName)
+    public abstract class PoolableObject : MonoBehaviour, IPoolable
     {
-        _poolName = poolName;
-    }
-
-    public virtual void ReturnToPool()
-    {
-        if (string.IsNullOrEmpty(_poolName))
+        private string _poolName;
+        [Inject] protected PoolManager _poolManager;
+        
+        public virtual void SetPoolName(string poolName)
         {
-            Debug.LogWarning($"{name}: Pool name is not set!");
-            return;
+            _poolName = poolName;
         }
 
-        PoolManager.Instance.Return(_poolName, gameObject);
+        public virtual void ReturnToPool()
+        {
+            if (string.IsNullOrEmpty(_poolName))
+            {
+                Debug.LogWarning($"{name}: Pool name is not set!");
+                return;
+            }
+
+            _poolManager.Return(_poolName, gameObject);
+        }
     }
 }

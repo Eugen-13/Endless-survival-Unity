@@ -1,28 +1,51 @@
-﻿using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
-
-class GameManager : MonoBehaviour
+namespace Managers
 {
-    public static GameManager Instance { get; private set; }
-
-    void Awake()
+    public class GameManager
     {
-        if (Instance != null)
+        private readonly EnemyManager _enemyManager;
+        private readonly ExperienceManager _experienceManager;
+        private readonly PopupManager _popupManager;
+        private readonly UpgradeManager _upgradeManager;
+        private readonly UIManager _uiManager;
+        
+        public GameManager(EnemyManager enemyManager, ExperienceManager experienceManager, PopupManager popupManager, UpgradeManager upgradeManager, UIManager uiManager)
         {
-            Destroy(gameObject);
-            return;
+            _enemyManager = enemyManager;
+            _experienceManager = experienceManager;
+            _popupManager = popupManager;
+            _upgradeManager = upgradeManager;
+            _uiManager = uiManager;
+        }
+        
+        public void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            _enemyManager.Clear();
+        }
+        public void AddExperience(int currentExp, int expToNextLevel)
+        {
+            _uiManager.UpdateXp(currentExp, expToNextLevel);
+        }
+        
+        public void LevelUp(int level)
+        {
+            _upgradeManager.ShowUpgradeChoices();
+            _uiManager.UpdateLevel(level);
         }
 
-        Instance = this;
-        DOTween.SetTweensCapacity(1000, 200);
-    }
+        public void TrySpawnCrystal(int expCount, Vector3 position, Vector2 scale)
+        {
+            _experienceManager.TrySpawnCrystal(expCount, position, scale);
+        }
 
-    public void Restart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        EnemyManager.Clear();
+        public void ShowPopup(int damage, Vector3 position, Color color)
+        {
+            _popupManager.ShowPopup(damage, position, color);
+        }
     }
-    
 }
+           

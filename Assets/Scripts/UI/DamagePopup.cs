@@ -1,51 +1,35 @@
-using UnityEngine;
-using TMPro;
+using Core.ObjectPool;
 using DG.Tweening;
+using TMPro;
+using UnityEngine;
 
-public class DamagePopup : PoolableObject
+namespace UI
 {
-    [SerializeField] private TextMeshPro _text;
-    [SerializeField] private  float _fadeDuration = 1f;
-    private Sequence _sequence;
-
-    public void Show(int damage, Color color)
+    public class DamagePopup : PoolableObject
     {
-        _text.text = "-" + damage.ToString();
-        _text.color = color;
-        _sequence?.Kill();
+        [SerializeField] private TextMeshPro _text;
+        private Sequence _sequence;
+        
+        public void Show(string text, Color color, float fadeDuration)
+        {
+            _text.text = text;
+            _text.color = color;
+            _sequence?.Kill();
+            
 
-        Vector3 startPos = transform.position;
-
-        _sequence = DOTween.Sequence()
-            .Append(_text.DOFade(0f, _fadeDuration)
-                .SetEase(Ease.InCubic))
-            .OnComplete(() =>
-            {
-                _text.alpha = 1f;
-                ReturnToPool();
-            });
-    }
-    public void Show(string text, Color color)
-    {
-        _text.text = text;
-        _text.color = color;
-        _sequence?.Kill();
-
-        Vector3 startPos = transform.position;
-
-        _sequence = DOTween.Sequence()
-            .Append(_text.DOFade(0f, _fadeDuration)
-                .SetEase(Ease.InCubic))
-            .OnComplete(() =>
-            {
-                _text.alpha = 1f;
-                ReturnToPool();
-            });
-    }
+            _sequence = DOTween.Sequence()
+                .Append(_text.DOFade(0f, fadeDuration).SetEase(Ease.InCubic))
+                .OnComplete(() =>
+                {
+                    _text.alpha = 1f;
+                    ReturnToPool();
+                });
+        }
 
 
-    private void OnDestroy()
-    {
-        _sequence?.Kill();
+        private void OnDisable()
+        {
+            _sequence?.Kill();
+        }
     }
 }

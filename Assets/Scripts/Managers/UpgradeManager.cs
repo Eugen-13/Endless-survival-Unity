@@ -1,129 +1,102 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using PlayerSystem;
+using UI;
+using UnityEngine;
+using Zenject;
 
-public class UpgradeManager : MonoBehaviour
+namespace Managers
 {
-    public static UpgradeManager Instance;
-
-    [Header("All Available Upgrades")]
-    [SerializeField] private List<UpgradeData> _allUpgrades;
-
-    [Header("References")]
-    [SerializeField] private GameObject _upgradePanel;
-    [SerializeField] private UpgradeButton[] _upgradeButtons; 
-
-    private Dictionary<UpgradeData, int> _upgradelevels = new Dictionary<UpgradeData, int>();
-    private Player _player;
-
-    void Awake()
+    public class UpgradeManager : MonoBehaviour
     {
-        Instance = this;
+        [Header("All Available Upgrades")]
+        [SerializeField] private List<UpgradeData> _allUpgrades;
+        
+        [Header("References")]
+        [SerializeField] private GameObject _upgradePanel;
+        [SerializeField] private UpgradeButton[] _upgradeButtons; 
 
-        foreach (var upgrade in _allUpgrades)
+        private readonly Dictionary<UpgradeData, int> _upgradeLevels = new();
+        private Player _player;
+
+        [Inject]
+        private void Construct(Player player)
         {
-            _upgradelevels[upgrade] = 0;
+            _player = player;
         }
-    }
-
-    void Start()
-    {
-        _player = Player.Instance;
-        _upgradePanel.SetActive(false);
-    }
-
-    public void ShowUpgradeChoices()
-    {
-     
-        Time.timeScale = 0f;
-        _upgradePanel.SetActive(true);
-
-       
-        List<UpgradeData> availableUpgrades = GetAvailableUpgrades();
-        List<UpgradeData> randomUpgrades = GetRandomUpgrades(availableUpgrades, 3);
-
-    
-        for (int i = 0; i < _upgradeButtons.Length; i++)
+        
+        private void Awake()
         {
-            if (i < randomUpgrades.Count)
+            foreach (UpgradeData upgrade in _allUpgrades)
             {
-                _upgradeButtons[i].SetupButton(randomUpgrades[i], _upgradelevels[randomUpgrades[i]]);
-                _upgradeButtons[i].gameObject.SetActive(true);
+                _upgradeLevels[upgrade] = 0;
             }
-            else
-            {
-                _upgradeButtons[i].gameObject.SetActive(false);
-            }
+            _upgradePanel.SetActive(false);
         }
-    }
-
-    private List<UpgradeData> GetAvailableUpgrades()
-    {
-        List<UpgradeData> available = new List<UpgradeData>();
-
-        foreach (var upgrade in _allUpgrades)
+        
+        public void ShowUpgradeChoices()
         {
- 
-            if (_upgradelevels[upgrade] < upgrade.maxLevel)
+            Time.timeScale = 0f;
+            _upgradePanel.SetActive(true);
+            List<UpgradeData> availableUpgrades = GetAvailableUpgrades();
+            List<UpgradeData> randomUpgrades = GetRandomUpgrades(availableUpgrades, 3);
+            for (int i = 0; i < _upgradeButtons.Length; i++)
             {
-                available.Add(upgrade);
+                if (i < randomUpgrades.Count)
+                {
+                    _upgradeButtons[i].SetupButton(randomUpgrades[i], _upgradeLevels[randomUpgrades[i]]);
+                    _upgradeButtons[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    _upgradeButtons[i].gameObject.SetActive(false);
+                }
             }
         }
 
-        return available;
-    }
-
-    private List<UpgradeData> GetRandomUpgrades(List<UpgradeData> available, int count)
-    {
-        if (available.Count <= count)
-            return available;
-
-
-        return available.OrderBy(x => Random.value).Take(count).ToList();
-    }
-
-    public void SelectUpgrade(UpgradeData upgrade)
-    {
-
-        _upgradelevels[upgrade]++;
-
-
-        ApplyUpgrade(upgrade);
-
-
-        _upgradePanel.SetActive(false);
-        Time.timeScale = 1f;
-    }
-
-    private void ApplyUpgrade(UpgradeData upgrade)
-    {
-        switch (upgrade.upgradeType)
+        private List<UpgradeData> GetAvailableUpgrades()
         {
-            case UpgradeData.UpgradeType.MaxHealth:
-                _player.MaxHealth += (int)upgrade.value;
-                _player.CurrentHealth += upgrade.value;
-                break;
-
-            case UpgradeData.UpgradeType.MoveSpeed:
-                _player.Speed += upgrade.value;
-                break;
-
-            case UpgradeData.UpgradeType.Damage:
-                _player.Damage += upgrade.value;
-                break;
-
-            case UpgradeData.UpgradeType.AttackSpeed:
-                _player.FireRate -= upgrade.value;
-                break;
-
-            case UpgradeData.UpgradeType.NewWeapon:
-                break;
+            return _allUpgrades.Where(upgrade => _upgradeLevels[upgrade] < upgrade.maxLevel).ToList();
         }
 
-    }
+        private List<UpgradeData> GetRandomUpgrades(List<UpgradeData> available, int count)
+        {
+            return available.Count <= count ? available : available.OrderBy(x => Random.value).Take(count).ToList();
+        }
 
-    public int GetUpgradeLevel(UpgradeData upgrade)
-    {
-        return _upgradelevels.ContainsKey(upgrade) ? _upgradelevels[upgrade] : 0;
+        public void SelectUpgrade(UpgradeData upgrade)
+        {
+            _upgradeLevels[upgrade]++;
+            ApplyUpgrade(upgrade);
+            
+            _upgradePanel.SetActive(false);
+            Time.timeScale = 1f;
+        }
+
+        private void ApplyUpgrade(UpgradeData upgrade)
+        {
+            switch (upgrade.upgradeType)
+            {
+                case UpgradeData.UpgradeType.MaxHealth:
+                    _player.MaxHealth += (int)upgrade.value;
+                    _player.CurrentHealth += upgrade.value;
+                    break;
+
+                case UpgradeData.UpgradeType.MoveSpeed:
+                    _player.Speed += upgrade.value;
+                    break;
+
+                case UpgradeData.UpgradeType.Damage:
+                    _player.Damage += upgrade.value;
+                    break;
+
+                case UpgradeData.UpgradeType.AttackSpeed:
+                    _player.FireRate -= upgrade.value;
+                    break;
+
+                case UpgradeData.UpgradeType.NewWeapon:
+                    break;
+            }
+        }
     }
 }

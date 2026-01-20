@@ -1,24 +1,40 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using EnemyTypes;
+using Managers;
+using UnityEngine;
+using Zenject;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : ITickable
 {
-    private void FixedUpdate()
+    private readonly EnemyManager _enemyManager;
+    
+    public EnemyController(EnemyManager enemyManager)
     {
-        var enemies = EnemyManager.Behaviours;
-        for (int i = 0; i < enemies.Count; i++)
+        _enemyManager = enemyManager;
+    }
+    public void Tick()
+    {
+        List<BaseEnemy> enemies = _enemyManager.Behaviours;
+        int count = enemies.Count;
+        
+        for (int i = 0; i < count; i++)
         {
-            var e1 = enemies[i];
+            BaseEnemy e1 = enemies[i];
             e1.Behavior();
 
+            Vector3 pos1 = e1.transform.position;
+            
             for (int j = i + 1; j < enemies.Count; j++)
             {
-                var e2 = enemies[j];
-                Vector2 diff = e1.transform.position - e2.transform.position;
-                float dist = diff.magnitude;
-                if (dist < e1.RepelRadius && dist > 0.01f)
+                BaseEnemy e2 = enemies[j];
+                Vector2 diff = pos1 - e2.transform.position;
+                float sqrDist = diff.sqrMagnitude;
+                float radius = Mathf.Max(e1.RepelRadius, e2.RepelRadius);
+                float sqrRadius = radius * radius;
+                if (sqrDist < sqrRadius || sqrDist < 0.0001f)
                 {
                     diff.Normalize();
-                    float force = (1f - dist / e1.RepelRadius) * e1.RepelForce * Time.fixedDeltaTime;
+                    float force = (1f - Mathf.Sqrt(sqrDist) / e1.RepelRadius) * e1.RepelForce * Time.fixedDeltaTime;
                     e1.Agent.Move(diff * force);
                     e2.Agent.Move(-diff * force);
                 }

@@ -1,13 +1,18 @@
-using UnityEngine;
 using Cinemachine;
+using PlayerSystem;
+using UnityEngine;
+using Zenject;
 
-public class Camera : MonoBehaviour
+namespace Camera
 {
-    private CinemachineVirtualCamera _vcam;
-    void Start()
+    public class Camera : MonoBehaviour
     {
-        _vcam = GetComponent<CinemachineVirtualCamera>();
-        _vcam.Follow = Player.Instance.transform    ;
-    }
+        [SerializeField] private CinemachineVirtualCamera _virtualCamera;
 
+        [Inject] private Player _player;
+        private void Start()
+        {
+            _virtualCamera.Follow = _player.transform;
+        }
+    }
 }
