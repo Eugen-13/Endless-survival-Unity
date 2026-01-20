@@ -74,7 +74,7 @@ public class EnemySpawner : MonoBehaviour
         string enemyPoolName = _enemyPoolName + GetRandomEnemy();
         Vector3 spawnPoint = _spawnPoints[_index % _spawnPoints.Length].position;
 
-        GameObject enemy = _poolManager.Get(_enemyPoolName, spawnPoint, Quaternion.identity);
+        GameObject enemy = _poolManager.Get(enemyPoolName, spawnPoint, Quaternion.identity);
         
         HealthBarFollow healthBar = (_poolManager.Get(_enemyHealthPoolName, enemy.transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity)).GetComponent<HealthBarFollow>();
         healthBar.SetTarget(enemy.transform);
