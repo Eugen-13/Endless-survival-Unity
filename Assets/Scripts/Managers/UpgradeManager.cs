@@ -9,14 +9,15 @@ namespace Managers
 {
     public class UpgradeManager : MonoBehaviour
     {
+        private readonly Dictionary<UpgradeData, int> _upgradeLevels = new ();
+
         [Header("All Available Upgrades")]
         [SerializeField] private List<UpgradeData> _allUpgrades;
-        
+
         [Header("References")]
         [SerializeField] private GameObject _upgradePanel;
-        [SerializeField] private UpgradeButton[] _upgradeButtons; 
+        [SerializeField] private UpgradeButton[] _upgradeButtons;
 
-        private readonly Dictionary<UpgradeData, int> _upgradeLevels = new();
         private Player _player;
 
         [Inject]
@@ -24,16 +25,17 @@ namespace Managers
         {
             _player = player;
         }
-        
+
         private void Awake()
         {
             foreach (UpgradeData upgrade in _allUpgrades)
             {
                 _upgradeLevels[upgrade] = 0;
             }
+
             _upgradePanel.SetActive(false);
         }
-        
+
         public void ShowUpgradeChoices()
         {
             Time.timeScale = 0f;
@@ -56,42 +58,46 @@ namespace Managers
 
         private List<UpgradeData> GetAvailableUpgrades()
         {
-            return _allUpgrades.Where(upgrade => _upgradeLevels[upgrade] < upgrade.maxLevel).ToList();
+            return _allUpgrades.Where(upgrade => _upgradeLevels[upgrade] < upgrade.MaxLevel).ToList();
         }
 
         private List<UpgradeData> GetRandomUpgrades(List<UpgradeData> available, int count)
         {
-            return available.Count <= count ? available : available.OrderBy(x => Random.value).Take(count).ToList();
+            return available.Count <= count ? available : available.OrderBy(_ => Random.value).Take(count).ToList();
         }
 
         public void SelectUpgrade(UpgradeData upgrade)
         {
             _upgradeLevels[upgrade]++;
             ApplyUpgrade(upgrade);
-            
+
             _upgradePanel.SetActive(false);
             Time.timeScale = 1f;
         }
 
         private void ApplyUpgrade(UpgradeData upgrade)
         {
-            switch (upgrade.upgradeType)
+            switch (upgrade.UpgradeTypeValue)
             {
                 case UpgradeData.UpgradeType.MaxHealth:
-                    _player.MaxHealth += (int)upgrade.value;
-                    _player.CurrentHealth += upgrade.value;
+                    _player.MaxHealth += (int)upgrade.Value;
+                    _player.CurrentHealth += upgrade.Value;
                     break;
 
                 case UpgradeData.UpgradeType.MoveSpeed:
-                    _player.Speed += upgrade.value;
+                    _player.Speed += upgrade.Value;
                     break;
 
                 case UpgradeData.UpgradeType.Damage:
-                    _player.Damage += upgrade.value;
+                    _player.Damage += upgrade.Value;
                     break;
 
                 case UpgradeData.UpgradeType.AttackSpeed:
-                    _player.FireRate -= upgrade.value;
+                    _player.FireRate -= upgrade.Value;
+                    
+                    if (_player.FireRate <= 0.01)
+                        _player.FireRate = 0.01f;
+                    
                     break;
 
                 case UpgradeData.UpgradeType.NewWeapon:

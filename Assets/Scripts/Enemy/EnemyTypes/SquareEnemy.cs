@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using DG.Tweening;
-using Managers;
 using PlayerSystem;
 using UnityEngine;
 
@@ -15,8 +14,9 @@ namespace EnemyTypes
         [SerializeField] private float _turnDuringLunge = 360f;
         [SerializeField] private float _preLungeDelay = 2f;
 
+        [SerializeField] private Collider2D _enemyCollider;
+
         private Vector3 _startPosition;
-        private Collider2D _enemyCollider;
         private Coroutine _collisionRoutine;
 
         protected override void Awake()
@@ -25,10 +25,7 @@ namespace EnemyTypes
             _agent.radius = 1.5f;
             _repelRadius = 3;
             _repelForce = 4;
-
-            _enemyCollider = GetComponent<Collider2D>();
         }
-
 
         public override void InitaliceStats(EnemyStats enemyStats)
         {
@@ -42,17 +39,18 @@ namespace EnemyTypes
         protected override IEnumerator AttackRoutine()
         {
             if (_isAttacking)
+            {
                 yield break;
+            }
 
             _isAttacking = true;
             _agent.isStopped = true;
             _startPosition = transform.position;
 
             Vector3 dirToPlayer = (_player.transform.position - _startPosition).normalized;
-            Vector3 lungeTarget = _startPosition + dirToPlayer * Vector3.Distance(_startPosition, _player.transform.position);
+            Vector3 lungeTarget = _startPosition + (dirToPlayer * Vector3.Distance(_startPosition, _player.transform.position));
 
             _agent.updatePosition = false;
-
 
             float angle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
@@ -98,11 +96,11 @@ namespace EnemyTypes
             {
                 Collider2D hit = Physics2D.OverlapCircle(transform.position, checkRadius, LayerMask.GetMask("Player"));
 
-                if (hit&& hit.CompareTag("Player"))
+                if (hit && hit.CompareTag("Player"))
                 {
                     hasHit = true;
 
-                    Player player = hit.GetComponent<PlayerSystem.Player>();
+                    Player player = hit.GetComponent<Player>();
                     if (player)
                     {
                         player.TakeDamage(_damage);
@@ -113,6 +111,7 @@ namespace EnemyTypes
                 yield return null;
             }
         }
+
         public override void ReturnToPool()
         {
             if (_collisionRoutine != null)

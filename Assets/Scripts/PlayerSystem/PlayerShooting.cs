@@ -9,6 +9,9 @@ namespace PlayerSystem
 {
     public class PlayerShooting : IInitializable, ITickable
     {
+        private readonly string _poolName = "BulletPool";
+        private readonly string _hitEffectPool = "hitEffectPool1";
+
         private InputSystem _inputSystem;
 
         private GameObject _hitEffect;
@@ -17,12 +20,15 @@ namespace PlayerSystem
         private EnemyManager _enemyManager;
         private PoolManager _poolManager;
         private Player _player;
+        private float _nextFireTime;
+        private Transform[] _currentTargets;
 
+        // private bool _isShooting;
         [Inject]
         private void Construct(
-            [Inject(Id = "HitEffectPrefab")]GameObject hitEffectPrefab, 
+            [Inject(Id = "HitEffectPrefab")]GameObject hitEffectPrefab,
             [Inject(Id = "FirePoint")]Transform firePoint,
-            Projectile projectilePrefab, 
+            Projectile projectilePrefab,
             EnemyManager enemyManager,
             PoolManager poolManager,
             Player player)
@@ -35,20 +41,13 @@ namespace PlayerSystem
             _player = player;
         }
 
-        private float _nextFireTime;
-        // private bool _isShooting;
-        private Transform[] _currentTargets;
-
-        private readonly string _poolName = "BulletPool";
-        private readonly string _hitEffectPool = "hitEffectPool1";
-
         public void Initialize()
         {
             _inputSystem = new InputSystem();
             _inputSystem.Enable();
 
-            //_inputSystem.Player.Shoot.performed += ctx => _isShooting = true;
-            //_inputSystem.Player.Shoot.canceled += ctx => _isShooting = false;
+            // _inputSystem.Player.Shoot.performed += ctx => _isShooting = true;
+            // _inputSystem.Player.Shoot.canceled += ctx => _isShooting = false;
             _poolManager.CreatePool(_poolName, _projectilePrefab.gameObject, 100);
             _poolManager.CreatePool(_hitEffectPool, _hitEffect, 100);
         }
@@ -59,14 +58,16 @@ namespace PlayerSystem
             ShootToTargets();
         }
 
-
         private void FindClosestVisibleEnemy()
         {
             Vector3 playerPos = _player.transform.position;
-            Dictionary<Transform, float> targets = new();
+            Dictionary<Transform, float> targets = new ();
             foreach (Transform enemy in _enemyManager.Enemies)
             {
-                if (!enemy) continue;
+                if (!enemy)
+                {
+                    continue;
+                }
 
                 float distance = (playerPos - enemy.position).sqrMagnitude;
 
@@ -79,13 +80,15 @@ namespace PlayerSystem
             int min = Math.Min(targets.Count, _player.ProjectileCount);
             _currentTargets = new Transform[min];
 
-
             for (int i = 0; i < _currentTargets.Length; i++)
             {
                 float closestDistance = Mathf.Infinity;
                 foreach (KeyValuePair<Transform, float> enemy in targets)
                 {
-                    if (!enemy.Key) continue;
+                    if (!enemy.Key)
+                    {
+                        continue;
+                    }
 
                     float distance = enemy.Value;
                     if (distance < closestDistance)
@@ -97,7 +100,9 @@ namespace PlayerSystem
                         RaycastHit2D hit = Physics2D.Raycast(playerPos, dir, distance, layerMask);
 
                         if (hit && _currentTargets.Contains(hit.collider.transform))
+                        {
                             continue;
+                        }
 
                         if (hit && hit.collider.transform == enemy.Key)
                         {
@@ -107,7 +112,6 @@ namespace PlayerSystem
                     }
                 }
             }
-
         }
 
         private void ShootToTargets()
@@ -120,17 +124,16 @@ namespace PlayerSystem
                     {
                         Shoot(_currentTargets[i]);
                         _nextFireTime = Time.time + _player.FireRate;
-
                     }
                 }
-            }   
+            }
         }
+
         private void Shoot(Transform target)
         {
             GameObject projectile = _poolManager.Get(_poolName, _firePoint.position, Quaternion.identity);
             Projectile bullet = projectile.GetComponent<Projectile>();
             bullet.Initialize(target, _player.BulletSpeed, _player.Damage, _hitEffectPool);
         }
-        
     }
 }

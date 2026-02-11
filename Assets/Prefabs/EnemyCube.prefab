@@ -109,11 +109,13 @@ MonoBehaviour:
   _repelForce: 3
   _maxHealth: 5
   _currentHealth: 0
+  _experience: 0
   _lungeDistance: 5
   _lungeDuration: 0.18
   _backDuration: 0.25
   _turnDuringLunge: 180
   _preLungeDelay: 0.3
+  _enemyCollider: {fileID: -7466309945540747996}
 --- !u!195 &96422748524291741
 NavMeshAgent:
   m_ObjectHideFlags: 0

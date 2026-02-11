@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using Zenject;
 
 namespace Managers
 {
@@ -11,7 +10,7 @@ namespace Managers
         private readonly PopupManager _popupManager;
         private readonly UpgradeManager _upgradeManager;
         private readonly UIManager _uiManager;
-        
+
         public GameManager(EnemyManager enemyManager, ExperienceManager experienceManager, PopupManager popupManager, UpgradeManager upgradeManager, UIManager uiManager)
         {
             _enemyManager = enemyManager;
@@ -20,17 +19,18 @@ namespace Managers
             _upgradeManager = upgradeManager;
             _uiManager = uiManager;
         }
-        
+
         public void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             _enemyManager.Clear();
         }
+
         public void AddExperience(int currentExp, int expToNextLevel)
         {
             _uiManager.UpdateXp(currentExp, expToNextLevel);
         }
-        
+
         public void LevelUp(int level)
         {
             _upgradeManager.ShowUpgradeChoices();
@@ -48,4 +48,3 @@ namespace Managers
         }
     }
 }
-           

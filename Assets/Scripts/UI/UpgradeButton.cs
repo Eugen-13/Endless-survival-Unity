@@ -2,7 +2,6 @@
 using PlayerSystem;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -10,7 +9,6 @@ namespace UI
 {
     public class UpgradeButton : MonoBehaviour
     {
-        [FormerlySerializedAs("iconImage")]
         [Header("UI References")]
         [SerializeField] private Image _iconImage;
         [SerializeField] private TextMeshProUGUI _nameText;
@@ -18,7 +16,7 @@ namespace UI
         [SerializeField] private TextMeshProUGUI _levelText;
         [SerializeField] private Button _button;
 
-        private UpgradeData currentUpgrade;
+        private UpgradeData _currentUpgrade;
         private UpgradeManager _upgradeManager;
 
         [Inject]
@@ -34,17 +32,17 @@ namespace UI
 
         public void SetupButton(UpgradeData upgrade, int currentLevel)
         {
-            currentUpgrade = upgrade;
+            _currentUpgrade = upgrade;
 
-            _iconImage.sprite = upgrade.icon;
-            _nameText.text = upgrade.upgradeName;
+            _iconImage.sprite = upgrade.Icon;
+            _nameText.text = upgrade.UpgradeName;
 
             string levelInfo = currentLevel > 0 ? $" (Ур. {currentLevel} → {currentLevel + 1})" : " (Новое!)";
-            _descriptionText.text = upgrade.description + "\n+" + upgrade.value + levelInfo;
+            _descriptionText.text = upgrade.Description + "\n+" + upgrade.Value + levelInfo;
 
             if (currentLevel > 0)
             {
-                _levelText.text = $"Уровень: {currentLevel}/{upgrade.maxLevel}";
+                _levelText.text = $"Уровень: {currentLevel}/{upgrade.MaxLevel}";
                 _levelText.gameObject.SetActive(true);
             }
             else
@@ -55,9 +53,9 @@ namespace UI
 
         private void OnButtonClick()
         {
-            if (currentUpgrade != null)
+            if (_currentUpgrade != null)
             {
-                _upgradeManager.SelectUpgrade(currentUpgrade);
+                _upgradeManager.SelectUpgrade(_currentUpgrade);
             }
         }
     }

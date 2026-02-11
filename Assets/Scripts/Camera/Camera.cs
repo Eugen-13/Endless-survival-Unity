@@ -10,6 +10,7 @@ namespace Camera
         [SerializeField] private CinemachineVirtualCamera _virtualCamera;
 
         [Inject] private Player _player;
+
         private void Start()
         {
             _virtualCamera.Follow = _player.transform;

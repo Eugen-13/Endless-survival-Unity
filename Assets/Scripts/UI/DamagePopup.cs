@@ -8,14 +8,14 @@ namespace UI
     public class DamagePopup : PoolableObject
     {
         [SerializeField] private TextMeshPro _text;
+
         private Sequence _sequence;
-        
+
         public void Show(string text, Color color, float fadeDuration)
         {
             _text.text = text;
             _text.color = color;
             _sequence?.Kill();
-            
 
             _sequence = DOTween.Sequence()
                 .Append(_text.DOFade(0f, fadeDuration).SetEase(Ease.InCubic))
@@ -25,7 +25,6 @@ namespace UI
                     ReturnToPool();
                 });
         }
-
 
         private void OnDisable()
         {

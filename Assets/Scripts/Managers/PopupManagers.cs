@@ -1,4 +1,3 @@
-using Collectables;
 using Configs;
 using UI;
 using UnityEngine;

@@ -1,5 +1,4 @@
 ﻿using UI;
-using UnityEngine;
 using Zenject;
 
 namespace Managers
@@ -13,7 +12,7 @@ namespace Managers
         {
             _xpPanel = xpPanel;
         }
-        
+
         public void UpdateXp(float current, float required)
         {
             _xpPanel.UpdateXp(current, required);

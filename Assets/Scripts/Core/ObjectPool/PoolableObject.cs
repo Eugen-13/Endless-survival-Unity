@@ -8,7 +8,7 @@ namespace Core.ObjectPool
     {
         private string _poolName;
         [Inject] protected PoolManager _poolManager;
-        
+
         public virtual void SetPoolName(string poolName)
         {
             _poolName = poolName;

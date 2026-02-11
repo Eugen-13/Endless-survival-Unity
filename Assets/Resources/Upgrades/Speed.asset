@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a2c47fa25c1dbe4b8a1ffec917b33d6, type: 3}
   m_Name: Speed
   m_EditorClassIdentifier: 
-  upgradeName: Speed+
-  description: Upgrade movespeed
-  icon: {fileID: 21300000, guid: 76d890b0d68a3b74a9a373c651c9f6d9, type: 3}
-  upgradeType: 1
-  value: 1
-  maxLevel: 5
+  UpgradeName: Move speed
+  Description: Increase move speed
+  Icon: {fileID: 21300000, guid: 76d890b0d68a3b74a9a373c651c9f6d9, type: 3}
+  UpgradeTypeValue: 1
+  Value: 1
+  MaxLevel: 5

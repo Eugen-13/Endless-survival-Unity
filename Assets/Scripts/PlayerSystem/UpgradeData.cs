@@ -5,12 +5,12 @@ namespace PlayerSystem
     [CreateAssetMenu(fileName = "New Upgrade", menuName = "Upgrades/Upgrade")]
     public class UpgradeData : ScriptableObject
     {
-        public string upgradeName;
-        public string description;
-        public Sprite icon;
-        public UpgradeType upgradeType;
-        public float value; 
-        public int maxLevel = 5; 
+        public string UpgradeName;
+        public string Description;
+        public Sprite Icon;
+        public UpgradeType UpgradeTypeValue;
+        public float Value;
+        public int MaxLevel = 5;
 
         public enum UpgradeType
         {
@@ -25,7 +25,7 @@ namespace PlayerSystem
             Armor,
             CritChance,
             CritDamage,
-            NewWeapon 
+            NewWeapon
         }
     }
 }

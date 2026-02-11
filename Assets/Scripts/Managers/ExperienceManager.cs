@@ -7,7 +7,6 @@ namespace Managers
 {
     public class ExperienceManager : IInitializable
     {
-
         private ExperienceCrystal _crystalPrefab;
         private PoolManager _poolManager;
         private ExperienceManagerConfig _config;
@@ -24,16 +23,17 @@ namespace Managers
             _poolManager = poolManager;
             _config = config;
         }
+
         public void Initialize()
         {
             _chance = _config.Chance;
             _magnetSpeed = _config.MagnetSpeed;
             _poolSize = _config.PoolSize;
             _poolName = _config.PoolName;
-            
+
             _poolManager.CreatePool(_poolName, _crystalPrefab.gameObject, _poolSize);
         }
-        
+
         public void TrySpawnCrystal(int exp, Vector3 position, Vector2 scale)
         {
             float random = Random.Range(0.0f, 1.0f);
@@ -43,7 +43,5 @@ namespace Managers
                 crystal.GetComponent<ExperienceCrystal>().Init(exp, _magnetSpeed);
             }
         }
-
-       
     }
 }

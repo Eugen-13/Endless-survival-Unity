@@ -18,7 +18,7 @@ namespace Core.HealthBar
         private string _poolName;
 
         [Inject] private PoolManager _poolManager;
-        
+
         private void Awake()
         {
             _baseScale = transform.localScale;
@@ -32,7 +32,9 @@ namespace Core.HealthBar
             transform.localScale = new Vector3(_baseScale.x * healthBarScale, _baseScale.y * healthBarScale);
 
             if (_healthSource != null)
+            {
                 _healthSource.OnHealthChanged -= UpdateBar;
+            }
 
             _healthSource = source;
 
@@ -53,7 +55,10 @@ namespace Core.HealthBar
 
         private void LateUpdate()
         {
-            if (!_target) return;
+            if (!_target)
+            {
+                return;
+            }
 
             Vector3 pos = _target.position;
             pos.y += _currentOffset.y;

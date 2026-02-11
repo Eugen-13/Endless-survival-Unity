@@ -11,7 +11,7 @@ namespace Collectables
         private int _expCount;
         private float _magnetSpeed;
         private Sequence _sequence;
-        
+
         private float _pickUpRadius;
         private float _pickUpRadiusSqr;
 
@@ -31,9 +31,11 @@ namespace Collectables
 
         private void FixedUpdate()
         {
-            if (!_player) return;
+            if (!_player)
+            {
+                return;
+            }
 
-        
             float sqr = (transform.position - _player.transform.position).sqrMagnitude;
 
             if (sqr <= 0.1)
@@ -42,11 +44,13 @@ namespace Collectables
                 _player.AddExperience(_expCount);
             }
 
-            if (!(sqr < _pickUpRadiusSqr)) return;
-            
+            if (!(sqr < _pickUpRadiusSqr))
+            {
+                return;
+            }
+
             Vector2 dir = (_player.transform.position - transform.position).normalized;
             transform.position += (Vector3)(dir * (_magnetSpeed * Time.fixedDeltaTime));
         }
-
     }
 }

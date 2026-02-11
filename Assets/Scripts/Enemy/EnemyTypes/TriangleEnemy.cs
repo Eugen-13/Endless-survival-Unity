@@ -15,6 +15,7 @@ namespace EnemyTypes
                 .Pause()
                 .SetAutoKill(false);
         }
+
         protected override void InitaliceMovementTween()
         {
             _movementTween = transform.DORotate(new Vector3(0, 0, 360), 2f, RotateMode.LocalAxisAdd)
