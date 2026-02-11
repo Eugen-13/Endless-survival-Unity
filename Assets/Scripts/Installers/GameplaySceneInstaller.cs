@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Collectables;
 using Configs;
 using Core.HealthBar;
@@ -16,8 +17,6 @@ namespace Installers
         [SerializeField] private ExperienceCrystal _crystalPrefab;
         [SerializeField] private DamagePopup _popupPrefab;
         [SerializeField] private HealthBarFollow _healthBarPlayerPrefab;
-        
-        
         [SerializeField] private GameObject _hitEffectPrefab;
         [SerializeField] private Transform _firePoint;
         [SerializeField] private Transform _poolsParent;

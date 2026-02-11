@@ -9,7 +9,7 @@ namespace Core.ObjectPool
         private readonly DiContainer _container;
         private readonly GameObject _prefab;
         private readonly Transform _parent;
-        private readonly Queue<GameObject> pool = new Queue<GameObject>();
+        private readonly Queue<GameObject> pool = new();
 
         public ObjectPool(DiContainer container, GameObject prefab, int initialSize, string key, Transform parent = null)
         {
