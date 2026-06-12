@@ -6,6 +6,7 @@
 
 Все статы игрока и врагов настриваются через конфиги.
 
+**Технологии:** Unity, Zenject (DI), DOTween (анимации), кастомный шейдер свечения.
 
 <img width="875" height="712" alt="изображение" src="https://github.com/user-attachments/assets/3ebb9c13-15a6-4de6-9290-b08f80ea491e" />
 
